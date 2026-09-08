@@ -13,10 +13,20 @@ function LinkedinIcon({ size = 16, className = '' }: { size?: number; className?
   )
 }
 
+function GithubIcon({ size = 16, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+      <path d="M9 18c-4.51 2-5-2-7-2" />
+    </svg>
+  )
+}
+
 const cards = [
   { icon: Mail, label: 'Email', value: contact.email, href: contact.emailHref },
   { icon: Phone, label: 'Phone', value: contact.phoneDisplay, href: contact.phoneHref },
   { icon: LinkedinIcon, label: 'LinkedIn', value: contact.linkedinDisplay, href: contact.linkedinHref },
+  { icon: GithubIcon, label: 'GitHub', value: contact.githubDisplay, href: contact.githubHref },
   { icon: MapPin, label: 'Location', value: contact.location, href: undefined },
 ]
 
@@ -33,7 +43,7 @@ export function Contact() {
           </Reveal>
         </div>
 
-        <div className="mt-14 grid gap-px overflow-hidden rounded-md border border-[var(--color-line)] bg-[var(--color-line)] sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid gap-px overflow-hidden rounded-md border border-[var(--color-line)] bg-[var(--color-line)] sm:grid-cols-2 lg:grid-cols-5">
           {cards.map(({ icon: Icon, label, value, href }, index) => {
             const content = (
               <div className="flex flex-col gap-3">
@@ -73,6 +83,10 @@ export function Contact() {
           <MagneticButton href={contact.linkedinHref} variant="outline" target="_blank" rel="noopener noreferrer">
             <LinkedinIcon size={15} />
             Connect on LinkedIn
+          </MagneticButton>
+          <MagneticButton href={contact.githubHref} variant="outline" target="_blank" rel="noopener noreferrer">
+            <GithubIcon size={15} />
+            GitHub Profile
           </MagneticButton>
           <MagneticButton href={contact.resumeHref} variant="outline" target="_blank" rel="noopener noreferrer">
             <FileText size={15} />

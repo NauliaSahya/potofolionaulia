@@ -16,6 +16,8 @@ export const contact = {
   emailHref: 'mailto:nauliaalthafah@gmail.com',
   linkedinDisplay: 'linkedin.com/in/nauliaa',
   linkedinHref: 'https://linkedin.com/in/nauliaa',
+  githubDisplay: 'github.com/NauliaSahya',
+  githubHref: 'https://github.com/NauliaSahya',
   resumeHref: 'https://drive.google.com/file/d/14O6ryNf5qiBUAm-KvAHvEn578dRz5ihD/view?usp=sharing',
 }
 

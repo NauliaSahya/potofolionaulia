@@ -87,7 +87,7 @@ naulia-portfolio/
 │   ├── picture/               # Arsip sumber gambar mentah sebelum diproses
 │   ├── data/                  # Pusat data konten & teks (terpisah dari komponen UI)
 │   │   ├── assets.ts          # Pemetaan path aset gambar dari /public/images/
-│   │   ├── content.ts         # Konten bio, hero, about, metrik, dan kontak
+│   │   ├── content.ts         # Konten bio, hero, about, metrik, dan kontak (email, phone, LinkedIn, GitHub)
 │   │   ├── projects.ts        # Data lengkap 4 proyek (SIRJ, CENIM, Hi-Me, KP RS PHC)
 │   │   ├── experience.ts      # Riwayat magang, asisten lab, kepanitiaan, & organisasi
 │   │   └── skills.ts          # Pengelompokan keahlian teknis & perangkat
@@ -116,8 +116,8 @@ naulia-portfolio/
 │       ├── Organization.tsx       # Riwayat kepemimpinan organisasi mahasiswa
 │       ├── Skills.tsx             # Grid keahlian teknis dengan ikon representatif
 │       ├── LanguagesEducation.tsx # Informasi pendidikan ITS & bahasa
-│       ├── Contact.tsx            # Form kontak, link sosial, email, & resume link Google Drive
-│       ├── Footer.tsx             # Footer penutup website & hak cipta
+│       ├── Contact.tsx            # Kontak langsung, link sosial (LinkedIn, GitHub), email, & resume
+│       ├── Footer.tsx             # Footer penutup website, link sosial, & hak cipta
 │       ├── CursorSpotlight.tsx    # Efek spotlight kursor halus di background
 │       ├── MagneticButton.tsx     # Tombol interaktif dengan efek tarikan magnetik kursor
 │       ├── MetricCounter.tsx      # Angka metrik counter beranimasi

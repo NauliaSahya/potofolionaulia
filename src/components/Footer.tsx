@@ -8,10 +8,30 @@ export function Footer() {
           <p className="font-[var(--font-display)] text-sm font-medium text-[var(--color-paper)]">{footer.name}</p>
           <p className="mt-1 text-xs text-[var(--color-paper-dim)]">{footer.tagline}</p>
         </div>
-        <div className="flex flex-col gap-1 text-xs text-[var(--color-paper-dim)] sm:items-end">
-          <a href={contact.emailHref} className="transition-colors duration-300 hover:text-[var(--color-cyan)]">
-            {contact.email}
-          </a>
+        <div className="flex flex-col gap-1.5 text-xs text-[var(--color-paper-dim)] sm:items-end">
+          <div className="flex items-center gap-3">
+            <a href={contact.emailHref} className="transition-colors duration-300 hover:text-[var(--color-cyan)]">
+              {contact.email}
+            </a>
+            <span className="text-[var(--color-line)]">·</span>
+            <a
+              href={contact.githubHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors duration-300 hover:text-[var(--color-cyan)]"
+            >
+              GitHub
+            </a>
+            <span className="text-[var(--color-line)]">·</span>
+            <a
+              href={contact.linkedinHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors duration-300 hover:text-[var(--color-cyan)]"
+            >
+              LinkedIn
+            </a>
+          </div>
           <span>© {footer.year} {footer.name}</span>
         </div>
       </div>
