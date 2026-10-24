@@ -12,18 +12,72 @@ import {
   ChevronRight,
   FileText,
   ArrowUpRight,
+  ChevronDown,
 } from 'lucide-react'
 import { hero, contact } from '@/data/content'
+import { projectList } from '@/data/projects'
+import { qaProjects } from '@/data/qaProjects'
 import { useActiveSection } from '@/hooks/useActiveSection'
 
-const navItems = [
+type NavChild = { label: string; href: string; group?: string }
+
+type NavItem = {
+  num: string
+  label: string
+  href: string
+  desc: string
+  icon: typeof Sparkles
+  children?: NavChild[]
+}
+
+const workChildren: NavChild[] = [
+  ...projectList.map((project) => ({ label: project.title, href: `#project-${project.slug}`, group: 'Projects' })),
+  ...(qaProjects.length > 0
+    ? qaProjects.map((project) => ({ label: project.title, href: `#project-${project.slug}`, group: 'QA Projects' }))
+    : [{ label: 'QA Projects', href: '#work-qa', group: 'QA Projects' }]),
+]
+
+const experienceChildren: NavChild[] = [
+  { label: 'Internship & Lab', href: '#experience-internship' },
+  { label: 'Volunteer & Committee', href: '#experience-volunteer' },
+  { label: 'Organization', href: '#experience-organization' },
+]
+
+const navItems: NavItem[] = [
   { num: '01', label: 'Home', href: '#home', desc: 'Hero & Lanyard Credential Pass', icon: Sparkles },
   { num: '02', label: 'About', href: '#about', desc: 'Core Philosophy & Team Metrics', icon: User },
-  { num: '03', label: 'Work', href: '#work', desc: 'SIRJ, CENIM, Hi-Me! & RS PHC', icon: Layers },
-  { num: '04', label: 'Experience', href: '#experience', desc: 'Internships, Lab & Organizations', icon: History },
+  { num: '03', label: 'Work', href: '#work', desc: 'Projects & QA Projects', icon: Layers, children: workChildren },
+  { num: '04', label: 'Experience', href: '#experience', desc: 'Internship, Volunteer & Organization', icon: History, children: experienceChildren },
   { num: '05', label: 'Skills', href: '#skills', desc: 'Medical Tech & Web Software', icon: Cpu },
   { num: '06', label: 'Contact', href: '#contact', desc: 'Inquiries & Direct Socials', icon: Mail },
 ]
+
+function DropdownMenu({ children }: { children: NavChild[] }) {
+  return (
+    <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-focus-within/nav:visible group-focus-within/nav:opacity-100 group-hover/nav:visible group-hover/nav:opacity-100">
+      <ul className="rounded-xl border border-[var(--color-line)] bg-[#050708]/95 p-2 shadow-xl shadow-black/50 backdrop-blur-xl">
+        {children.map((child, index) => {
+          const showGroup = child.group && child.group !== children[index - 1]?.group
+          return (
+            <li key={child.href}>
+              {showGroup && (
+                <p className="px-3 pb-1 pt-2 font-mono text-[10px] uppercase tracking-widest text-[var(--color-cyan)]">
+                  {child.group}
+                </p>
+              )}
+              <a
+                href={child.href}
+                className="block rounded-lg px-3 py-2 text-sm text-[var(--color-paper-dim)] transition-colors hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-paper)]"
+              >
+                {child.label}
+              </a>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
 
 const sectionIds = navItems.map((item) => item.href.replace('#', ''))
 
@@ -113,21 +167,27 @@ export function Navbar() {
               const id = item.href.replace('#', '')
               const isActive = active === id
               return (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className="relative px-3.5 py-1.5 text-sm font-medium text-[var(--color-paper-dim)] transition-colors duration-200 hover:text-[var(--color-paper)]"
-                  aria-current={isActive ? 'true' : undefined}
-                >
-                  <span className={isActive ? 'text-[var(--color-paper)]' : ''}>{item.label}</span>
-                  {isActive && (
-                    <motion.span
-                      layoutId="activeNavIndicator"
-                      className="absolute inset-x-3 -bottom-1 h-[2px] rounded-full bg-[var(--color-cyan)] shadow-[0_0_10px_rgba(79,214,224,0.8)]"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </a>
+                <div key={item.href} className="group/nav relative">
+                  <a
+                    href={item.href}
+                    className="relative flex items-center gap-1 px-3.5 py-1.5 text-sm font-medium text-[var(--color-paper-dim)] transition-colors duration-200 hover:text-[var(--color-paper)]"
+                    aria-current={isActive ? 'true' : undefined}
+                    aria-haspopup={item.children ? 'true' : undefined}
+                  >
+                    <span className={isActive ? 'text-[var(--color-paper)]' : ''}>{item.label}</span>
+                    {item.children && (
+                      <ChevronDown size={13} className="transition-transform duration-200 group-hover/nav:rotate-180 group-focus-within/nav:rotate-180" />
+                    )}
+                    {isActive && (
+                      <motion.span
+                        layoutId="activeNavIndicator"
+                        className="absolute inset-x-3 -bottom-1 h-[2px] rounded-full bg-[var(--color-cyan)] shadow-[0_0_10px_rgba(79,214,224,0.8)]"
+                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </a>
+                  {item.children && <DropdownMenu>{item.children}</DropdownMenu>}
+                </div>
               )
             })}
           </nav>
@@ -211,8 +271,8 @@ export function Navbar() {
                     const IconComponent = item.icon
 
                     return (
+                      <div key={item.href} className="flex flex-col gap-2">
                       <motion.a
-                        key={item.href}
                         href={item.href}
                         onClick={() => setMenuOpen(false)}
                         initial={{ opacity: 0, x: -12 }}
@@ -255,6 +315,21 @@ export function Navbar() {
                           }`}
                         />
                       </motion.a>
+                      {item.children && (
+                        <div className="flex flex-wrap gap-2 pb-1 pl-3">
+                          {item.children.map((child) => (
+                            <a
+                              key={child.href}
+                              href={child.href}
+                              onClick={() => setMenuOpen(false)}
+                              className="rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-1.5 text-xs text-[var(--color-paper-dim)] transition-colors active:scale-95 hover:border-[var(--color-cyan)] hover:text-[var(--color-cyan)]"
+                            >
+                              {child.label}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                      </div>
                     )
                   })}
                 </div>

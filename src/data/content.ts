@@ -69,7 +69,7 @@ export const education = [
   {
     school: 'Institut Teknologi Sepuluh Nopember',
     program: 'Biomedical Engineering',
-    date: 'July 2022 - August 2026',
+    date: 'August 2022 - August 2026',
     detail: 'GPA 3.78 / 4.00 · Medical Informatics focus',
   },
   {
@@ -84,6 +84,11 @@ export const education = [
     date: 'July 2017 - July 2020',
     detail: 'Bilingual Class Graduate',
   },
+]
+
+export const honors = [
+  { kind: 'Award', title: 'Bakti BCA Scholarship Awardee' },
+  { kind: 'Certification', title: 'Tes Potensi Kemampuan Akademik (TPA)' },
 ]
 
 export const footer = {

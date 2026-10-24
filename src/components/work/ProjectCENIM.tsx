@@ -6,11 +6,11 @@ import { ImageWithFallback } from '@/components/ImageWithFallback'
 
 export function ProjectCENIM() {
   return (
-    <section id="project-cenim" className="border-t border-[var(--color-line)] py-24 md:py-32">
-      <div className="container-edit">
+    <div id="project-cenim" className="pb-4 pt-2 md:pb-8">
+      <div>
         <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
           <div>
-            <Reveal className="font-mono text-xs text-[var(--color-cyan)]">02 · Selected work</Reveal>
+            <Reveal className="font-mono text-xs text-[var(--color-cyan)]">Case study</Reveal>
             <Reveal as="h2" delay={60} className="mt-4 font-[var(--font-display)] text-4xl font-medium tracking-tight text-[var(--color-paper)] md:text-5xl">
               {cenim.title}
             </Reveal>
@@ -100,7 +100,7 @@ export function ProjectCENIM() {
           </a>
         </Reveal>
       </div>
-    </section>
+    </div>
   )
 }
 
