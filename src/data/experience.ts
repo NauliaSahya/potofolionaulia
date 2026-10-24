@@ -1,9 +1,23 @@
+import { assets } from './assets'
+
+export type ExperienceImage = {
+  src: string
+  alt: string
+  label?: string
+}
+
 export type ExperienceEntry = {
   org: string
   role: string
+  /** Label tampilan, mis. "Jan 2025 - Feb 2026". */
   period: string
-  detail?: string
-  bullets?: string[]
+  /** Bulan mulai (YYYY-MM), dipakai untuk mengurutkan dan mengelompokkan per tahun. */
+  start: string
+  /** Konteks singkat, mis. nama acara atau bidangnya. */
+  context?: string
+  /** Pencapaian dengan rumus XYZ: hasil (X), ukuran (Y), cara (Z). */
+  bullets: string[]
+  images?: ExperienceImage[]
 }
 
 export type ExperienceCategoryId = 'internship' | 'volunteer' | 'organization'
@@ -16,9 +30,9 @@ export type ExperienceCategory = {
 }
 
 /**
- * Urutan entri: terbaru di atas. Isi Internship & Lab dan HMTB mengikuti
- * profil LinkedIn (PDF Oktober 2026). UKM Robotic, UKM Expo, BEACON, dan
- * CENIM belum ada di LinkedIn, jadi masih memakai data portofolio lama.
+ * Untuk menambah foto pada sebuah entri, taruh file di public/images lalu
+ * isi `images`, contoh:
+ *   images: [{ src: '/images/beacon-1.webp', alt: 'Tim BEACON ITS', label: 'Hari acara' }]
  */
 export const experienceCategories: ExperienceCategory[] = [
   {
@@ -30,36 +44,35 @@ export const experienceCategories: ExperienceCategory[] = [
         org: 'Biomedical Signal Processing Laboratory',
         role: 'Practicum Coordinator',
         period: 'Aug 2025 - Jul 2026',
-        detail:
-          'Directed the operational and instructional activities of the practicum, ensuring smooth academic operations and effective learning delivery.',
+        start: '2025-08',
         bullets: [
-          'Led a team of 20+ teaching assistants, overseeing task allocation and daily practicum activities.',
-          'Coordinated biomedical signal processing practicums for more than 100 undergraduate students.',
-          'Developed and standardized practicum modules, instructional materials, and documentation across all lab sessions.',
-          'Facilitated communication among lecturers, teaching assistants, and students while overseeing administrative and operational processes.',
+          'Kept instructional standards consistent through a full academic year by leading 20+ teaching assistants, allocating tasks, and overseeing daily practicum activities.',
+          'Delivered biomedical signal processing practicums to 100+ undergraduate students by coordinating lecturers, assistants, and students through a structured program.',
+          'Improved learning quality and administrative consistency across all lab sessions by developing standardized practicum modules, instructional materials, and documentation.',
         ],
       },
       {
         org: 'RS Primasatya Husada Citra (PHC) Surabaya',
         role: 'Hospital Administration Intern',
         period: 'Jul 2025 - Aug 2025',
+        start: '2025-07',
         bullets: [
-          'Analyzed administrative workflows within the Medical Records Unit and identified inefficiencies in medical coding processes.',
-          'Designed a digital prototype in Figma to improve medical coding data exchange.',
-          'Collaborated with hospital staff to gather requirements and translate operational needs into digital solutions.',
-          'Supported daily administrative data processing in Microsoft Excel, keeping hospital records accurate and reliable.',
+          'Identified inefficiencies in medical coding by analyzing administrative workflows in the Medical Records Unit and proposing targeted operational improvements.',
+          'Streamlined the proposed medical coding data exchange by designing a digital prototype in Figma.',
+          'Turned operational needs into actionable digital solutions by gathering requirements directly with hospital staff.',
+          'Validated the proposed workflow with leaders of 4 hospital units (Customer Service, IT, Medical Records, Komkordik) by presenting the findings and prototype.',
+          'Kept hospital records accurate and reliable by supporting daily administrative data processing in Microsoft Excel.',
         ],
       },
       {
         org: 'Biomedical Signal Processing Laboratory',
         role: 'Vice Practicum Coordinator',
         period: 'Aug 2024 - Jul 2025',
-        detail:
-          'Supported the logistics and administrative coordination of the lab, optimizing resource allocation and scheduling for all practicum sessions.',
+        start: '2024-08',
         bullets: [
-          'Planned practicum schedules, student group assignments, and laboratory logistics to prevent operational bottlenecks.',
-          'Assisted in overseeing daily practicum activities and task allocation for teaching assistants.',
-          'Coordinated administrative processes and communication between the academic team and student cohorts.',
+          'Prevented operational bottlenecks across all practicum sessions by planning schedules, student group assignments, and laboratory logistics.',
+          'Kept teaching assistant work aligned with the academic curriculum by helping oversee daily practicum activities and task allocation.',
+          'Minimized administrative errors between the academic team and student cohorts by coordinating administrative processes and communication.',
         ],
       },
     ],
@@ -67,59 +80,139 @@ export const experienceCategories: ExperienceCategory[] = [
   {
     id: 'volunteer',
     label: 'Volunteer & Committee',
-    summary: 'Event committees and one-off volunteer roles.',
+    summary: 'Event committees and staff roles.',
     entries: [
       {
         org: 'CENIM 2025',
         role: 'Event & Website Contribution',
         period: '2025',
-        detail: 'Contributed to the conference website and supported rundown and staff coordination.',
+        start: '2025-01',
+        context: 'International Conference on Computer Engineering, Network and Intelligent Multimedia',
+        bullets: [
+          'Delivered the CENIM 2025 conference website by adapting a pre-existing conference template with HTML, CSS, and PHP.',
+          'Kept event operations running alongside the faculty committee by coordinating 12 student staff with 3 core student committee members and supporting the rundown.',
+        ],
+        images: [
+          { src: assets.projects.cenim.event, alt: 'CENIM 2025 conference event day', label: 'Event day' },
+          { src: assets.projects.cenim.home, alt: 'CENIM 2025 conference website', label: 'Conference website' },
+        ],
       },
       {
-        org: 'BEACON 2024',
+        org: 'UKM Expo ITS',
+        role: 'Expert Staff of Data Management',
+        period: 'May 2024 - Aug 2024',
+        start: '2024-05',
+        bullets: [
+          'Verified 5,000+ event tickets for authenticity by applying UV verification, ensuring accurate attendee admission.',
+          'Ensured only registered participants entered the event by supervising entry gate operations.',
+          'Kept ticket records consistent with official registration data by overseeing ticket exchange and reconciling redeemed tickets.',
+          'Contributed to building the next Data Management team by taking part in staff recruitment and interviews.',
+        ],
+      },
+      {
+        org: 'BEACON ITS',
         role: 'Expert Staff of Secretarial',
-        period: '2024',
+        period: 'Mar 2024 - Mar 2025',
+        start: '2024-03',
+        bullets: [
+          'Managed participant data for 3 event categories, supporting 170+ participants throughout the event.',
+          'Streamlined registration and feedback by designing digital workflows in Google Forms, with records kept in Google Drive and Google Sheets.',
+          'Delivered personalized digital certificates by merging participant information into Figma certificate templates.',
+          'Supported smooth event execution and accurate participant data by coordinating with the event division.',
+        ],
+      },
+      {
+        org: 'BEM FTEIC ITS',
+        role: 'Staff of Secretarial',
+        period: 'Sep 2023 - Nov 2023',
+        start: '2023-09',
+        context: 'EliteXPesraf',
+        bullets: [
+          'Kept registration records accurate by managing participant registration through Google Forms.',
+          'Kept ticket distribution and participant administration running smoothly throughout the event by coordinating both.',
+          'Supported efficient event preparation and execution through administrative operations.',
+        ],
+      },
+      {
+        org: 'UKM Expo ITS',
+        role: 'Data Management Staff',
+        period: 'May 2023 - Aug 2023',
+        start: '2023-05',
+        bullets: [
+          'Tracked participant attendance by managing QR code-based registration integrated with Google Forms.',
+          'Supported post-event evaluation and reporting by compiling and analyzing attendance data.',
+          'Kept event documentation accurate by assisting in maintaining participant records.',
+        ],
+      },
+      {
+        org: 'IRIS ITS',
+        role: 'Event Staff',
+        period: 'Mar 2023 - Aug 2023',
+        start: '2023-03',
+        context: 'Science and Technology competition',
+        bullets: [
+          'Kept the competition flow smooth by coordinating event schedules and match sequencing.',
+          'Maintained operational efficiency despite unexpected delays by adjusting event timelines on the spot.',
+          'Kept activities on schedule throughout the competition through real-time event coordination.',
+        ],
+      },
+      {
+        org: 'Himpunan Mahasiswa Teknik Biomedik ITS',
+        role: 'Staff of Administrative Division',
+        period: 'Aug 2022 - Sep 2022',
+        start: '2022-08',
+        context: 'BME Awards 2022',
+        bullets: [
+          'Supported participant management by developing RSVP and event feedback forms in Google Forms.',
+          'Gave participants one place for registration forms, event information, and feedback by organizing digital event resources in Linktree.',
+          'Enabled efficient communication with participants before and during the event by supporting administrative coordination.',
+        ],
       },
     ],
   },
   {
     id: 'organization',
     label: 'Organization',
-    summary: 'Student organizations and leadership.',
+    summary: 'Student organizations and secretariat leadership.',
     entries: [
       {
-        org: 'HMTB ITS (Himpunan Mahasiswa Teknik Biomedik)',
-        role: 'Secretary',
+        org: 'Himpunan Mahasiswa Teknik Biomedik ITS',
+        role: 'Secretary I',
         period: 'Jan 2025 - Feb 2026',
+        start: '2025-01',
         bullets: [
-          'Drafted official correspondence, recommendation letters, and administrative documents.',
-          'Managed organizational inventory records and archived correspondence, proposals, and financial reports (SPJ/LPJ).',
-          'Coordinated administrative processes across departments and supported the executive board with planning, evaluation, and decision-making.',
-          'Facilitated communication between the executive board and departments for program execution.',
+          'Standardized secretarial work for future administrations by developing the organization’s first Standard Operating Procedure (SOP) for Secretarial Affairs.',
+          'Kept letter, SPJ (Financial Accountability Report), and LPJ (Final Accountability Report) requests on time by processing them through Google Forms.',
+          'Made organizational documents structured and easy to find by managing archives in Google Drive and Google Sheets.',
+          'Ensured accuracy, completeness, and consistency of official documents by reviewing them before submission.',
+          'Improved organizational governance by evaluating administrative processes with Executive Board members and recommending improvements.',
+          'Kept asset records accurate by maintaining and updating the inventory.',
         ],
       },
       {
-        org: 'HMTB ITS (Himpunan Mahasiswa Teknik Biomedik)',
-        role: 'Secretary',
-        period: 'May 2024 - Dec 2024',
-        bullets: [
-          'Drafted official correspondence, recommendation letters, and administrative documents.',
-          'Managed organizational inventory records and archived correspondence, proposals, and financial reports (SPJ/LPJ).',
-          'Coordinated administrative processes across departments and supported the executive board with planning, evaluation, and decision-making.',
-          'Facilitated communication between the executive board and departments for program execution.',
-        ],
-      },
-      {
-        org: 'UKM Robotic ITS',
+        org: 'Himpunan Mahasiswa Teknik Biomedik ITS',
         role: 'Secretary II',
-        period: '2024',
-        detail: 'Supported administrative operations for the robotics student organization.',
+        period: 'May 2024 - Dec 2024',
+        start: '2024-05',
+        bullets: [
+          'Supported organizational operations by drafting official documents, including recommendation letters, statements, and administrative correspondence.',
+          'Improved document organization and retrieval by managing digital archives in Google Drive and Google Sheets.',
+          'Kept letter, SPJ, and LPJ requests on schedule by processing them through Google Forms.',
+          'Supported the Executive Board by monitoring administrative compliance of proposals and accountability reports.',
+          'Kept administrative documentation and inventory records up to date to support organizational operations.',
+        ],
       },
       {
-        org: 'UKM Expo ITS',
-        role: 'Staff → Expert Staff of Data Management',
-        period: '2023 - 2024',
-        detail: 'Handled participant and exhibitor data, then moved up to oversee data accuracy across the event.',
+        org: 'ITS Robotics',
+        role: 'Secretary II',
+        period: 'Mar 2024 - Feb 2025',
+        start: '2024-03',
+        bullets: [
+          'Supported internal and external needs by drafting official correspondence.',
+          'Ensured administrative compliance by assisting in reviewing proposals, SPJ, and LPJ.',
+          'Handled venue and equipment requests by coordinating administrative communication with scholarship providers and university facilities management.',
+          'Preserved a clear record of meetings and assemblies by preparing meeting minutes and maintaining documentation.',
+        ],
       },
     ],
   },

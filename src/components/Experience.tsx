@@ -1,20 +1,124 @@
-import { useCallback, useEffect, useState } from 'react'
-import { Briefcase } from 'lucide-react'
-import { capabilityGroups, experienceCategories, type ExperienceCategoryId } from '@/data/experience'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ArrowDownUp, Briefcase, Calendar } from 'lucide-react'
+import {
+  capabilityGroups,
+  experienceCategories,
+  type ExperienceCategoryId,
+  type ExperienceEntry,
+} from '@/data/experience'
 import { Reveal } from '@/components/Reveal'
+import { ImageWithFallback } from '@/components/ImageWithFallback'
+import { useScrollProgress } from '@/hooks/useScrollProgress'
+import { useInView } from '@/hooks/useInView'
 
-const hashToCategory: Record<string, ExperienceCategoryId> = {
+type TabId = 'all' | ExperienceCategoryId
+
+type FlatEntry = ExperienceEntry & { category: ExperienceCategoryId; categoryLabel: string }
+
+type YearGroup = { year: string; items: FlatEntry[] }
+
+const hashToTab: Record<string, TabId> = {
+  'experience-all': 'all',
   'experience-internship': 'internship',
   'experience-volunteer': 'volunteer',
   'experience-organization': 'organization',
 }
 
+const flatEntries: FlatEntry[] = experienceCategories.flatMap((category) =>
+  category.entries.map((entry) => ({ ...entry, category: category.id, categoryLabel: category.label })),
+)
+
+const tabs: { id: TabId; label: string; count: number; summary: string }[] = [
+  { id: 'all', label: 'All', count: flatEntries.length, summary: 'The full journey, year by year.' },
+  ...experienceCategories.map((category) => ({
+    id: category.id as TabId,
+    label: category.label,
+    count: category.entries.length,
+    summary: category.summary,
+  })),
+]
+
+function groupByYear(entries: FlatEntry[], newestFirst: boolean): YearGroup[] {
+  const sorted = [...entries].sort((a, b) => a.start.localeCompare(b.start))
+  if (newestFirst) sorted.reverse()
+
+  const groups: YearGroup[] = []
+  for (const entry of sorted) {
+    const year = entry.start.slice(0, 4)
+    const last = groups[groups.length - 1]
+    if (last && last.year === year) {
+      last.items.push(entry)
+    } else {
+      groups.push({ year, items: [entry] })
+    }
+  }
+  return groups
+}
+
+function TimelineItem({ entry, showCategory, index }: { entry: FlatEntry; showCategory: boolean; index: number }) {
+  const { ref, inView } = useInView<HTMLLIElement>({ threshold: 0.3, rootMargin: '-15% 0px -25% 0px' })
+
+  return (
+    <li ref={ref} className="relative pl-9">
+      <span
+        className="absolute left-0 top-2 h-2.5 w-2.5 -translate-x-1/2 rounded-full border-2 transition-colors duration-500"
+        style={{
+          borderColor: inView ? 'var(--color-cyan)' : 'var(--color-line)',
+          backgroundColor: inView ? 'var(--color-cyan)' : 'var(--color-ink)',
+        }}
+        aria-hidden="true"
+      />
+
+      <Reveal delay={Math.min(index, 4) * 50}>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span className={`inline-flex items-center gap-1.5 font-mono text-xs ${inView ? 'text-[var(--color-cyan)]' : 'text-[var(--color-paper-dim)]'}`}>
+            <Calendar size={12} className="opacity-70" />
+            {entry.period}
+          </span>
+          {showCategory && (
+            <span className="rounded-full border border-[var(--color-line)] px-2.5 py-0.5 text-[10px] text-[var(--color-paper-dim)]">
+              {entry.categoryLabel}
+            </span>
+          )}
+        </div>
+
+        <h3 className="mt-2 font-[var(--font-display)] text-lg font-medium text-[var(--color-paper)]">{entry.org}</h3>
+        <p className="text-sm text-[var(--color-paper-dim)]">
+          {entry.role}
+          {entry.context && <span className="text-[var(--color-paper-dim)]/70"> · {entry.context}</span>}
+        </p>
+
+        <ul className="mt-3 flex max-w-[64ch] flex-col gap-2">
+          {entry.bullets.map((bullet) => (
+            <li key={bullet} className="flex items-start gap-3 text-sm leading-relaxed text-[var(--color-paper-dim)]">
+              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[var(--color-cyan)]" aria-hidden="true" />
+              {bullet}
+            </li>
+          ))}
+        </ul>
+
+        {entry.images && entry.images.length > 0 && (
+          <div className="mt-5 grid max-w-[40rem] gap-3 sm:grid-cols-2">
+            {entry.images.map((image) => (
+              <div key={image.src + image.alt} className="overflow-hidden rounded-md border border-[var(--color-line)]">
+                <ImageWithFallback src={image.src} alt={image.alt} ratio="16 / 10" label={image.label} />
+              </div>
+            ))}
+          </div>
+        )}
+      </Reveal>
+    </li>
+  )
+}
+
 export function Experience() {
-  const [active, setActive] = useState<ExperienceCategoryId>('internship')
+  const [active, setActive] = useState<TabId>('all')
+  const [newestFirst, setNewestFirst] = useState(false)
+  const { ref, progress } = useScrollProgress<HTMLDivElement>()
 
   // Deep links from the navbar dropdown, e.g. #experience-volunteer.
   const handleHash = useCallback(() => {
-    const target = hashToCategory[window.location.hash.replace('#', '')]
+    const target = hashToTab[window.location.hash.replace('#', '')]
     if (!target) return
     setActive(target)
     window.history.replaceState(null, '', '#experience')
@@ -30,7 +134,12 @@ export function Experience() {
     return () => window.removeEventListener('hashchange', handleHash)
   }, [handleHash])
 
-  const category = experienceCategories.find((item) => item.id === active) ?? experienceCategories[0]
+  const tab = tabs.find((item) => item.id === active) ?? tabs[0]
+
+  const groups = useMemo(() => {
+    const entries = active === 'all' ? flatEntries : flatEntries.filter((entry) => entry.category === active)
+    return groupByYear(entries, newestFirst)
+  }, [active, newestFirst])
 
   return (
     <section id="experience" className="border-t border-[var(--color-line)] py-24 md:py-32">
@@ -41,64 +150,86 @@ export function Experience() {
             Experience
           </Reveal>
           <Reveal delay={80} className="max-w-[40ch] text-sm text-[var(--color-paper-dim)]">
-            Internship, volunteer, and organization roles, grouped so each one is easy to find.
+            Internship, volunteer, and organization roles, laid out as a timeline.
           </Reveal>
         </div>
 
-        <div className="mt-10 overflow-x-auto pb-1">
-          <div role="tablist" aria-label="Kategori pengalaman" className="inline-flex min-w-max rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] p-1">
-            {experienceCategories.map((item) => {
-              const selected = item.id === active
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={selected}
-                  onClick={() => setActive(item.id)}
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                    selected
-                      ? 'bg-[var(--color-cyan)] text-[var(--color-ink)]'
-                      : 'text-[var(--color-paper-dim)] hover:text-[var(--color-paper)]'
-                  }`}
-                >
-                  {item.label}
-                  <span className={`ml-2 font-mono text-[11px] ${selected ? 'opacity-70' : 'opacity-60'}`}>{item.entries.length}</span>
-                </button>
-              )
-            })}
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
+          <div className="overflow-x-auto pb-1">
+            <div role="tablist" aria-label="Kategori pengalaman" className="inline-flex min-w-max rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] p-1">
+              {tabs.map((item) => {
+                const selected = item.id === active
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={selected}
+                    onClick={() => setActive(item.id)}
+                    className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                      selected
+                        ? 'bg-[var(--color-cyan)] text-[var(--color-ink)]'
+                        : 'text-[var(--color-paper-dim)] hover:text-[var(--color-paper)]'
+                    }`}
+                  >
+                    {item.label}
+                    <span className={`ml-2 font-mono text-[11px] ${selected ? 'opacity-70' : 'opacity-60'}`}>{item.count}</span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setNewestFirst((value) => !value)}
+            className="inline-flex items-center gap-2 rounded-full border border-[var(--color-line)] px-4 py-2 text-xs text-[var(--color-paper-dim)] transition-colors hover:border-[var(--color-cyan)] hover:text-[var(--color-cyan)]"
+          >
+            <ArrowDownUp size={13} />
+            {newestFirst ? 'Newest first' : 'Oldest first'}
+          </button>
         </div>
 
-        <p className="mt-6 text-sm text-[var(--color-paper-dim)]">{category.summary}</p>
+        <p className="mt-6 text-sm text-[var(--color-paper-dim)]">{tab.summary}</p>
 
-        <ul key={category.id} role="tabpanel" className="mt-4 divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]">
-          {category.entries.map((entry) => (
-            <li key={`${entry.org}-${entry.role}-${entry.period}`} className="grid gap-2 py-7 sm:grid-cols-[10rem_1fr] sm:gap-8">
-              <span className="font-mono text-xs text-[var(--color-cyan)] sm:pt-1.5">{entry.period}</span>
-              <div>
-                <h3 className="font-[var(--font-display)] text-lg font-medium text-[var(--color-paper)]">{entry.org}</h3>
-                <p className="mt-0.5 text-sm text-[var(--color-paper-dim)]">{entry.role}</p>
-                {entry.detail && (
-                  <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-[var(--color-paper-dim)]">{entry.detail}</p>
-                )}
-                {entry.bullets && (
-                  <ul className="mt-3 flex max-w-[60ch] flex-col gap-2">
-                    {entry.bullets.map((bullet) => (
-                      <li key={bullet} className="flex items-start gap-3 text-sm leading-relaxed text-[var(--color-paper-dim)]">
-                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[var(--color-cyan)]" aria-hidden="true" />
-                        {bullet}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div ref={ref} key={active} role="tabpanel" className="relative mt-10">
+          <div className="absolute left-0 top-0 h-full w-px bg-[var(--color-line)]" aria-hidden="true" />
+          <div
+            className="absolute left-0 top-0 w-px bg-[var(--color-cyan)]"
+            style={{ height: `${progress * 100}%`, transition: 'height 80ms linear' }}
+            aria-hidden="true"
+          />
+
+          <ol className="flex flex-col gap-12">
+            {groups.map((group) => (
+              <li key={group.year} className="relative">
+                <div className="relative pl-9">
+                  <span
+                    className="absolute left-0 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[var(--color-cyan)] bg-[var(--color-ink)]"
+                    aria-hidden="true"
+                  />
+                  <p className="font-[var(--font-display)] text-3xl font-medium tracking-tight text-[var(--color-paper)] md:text-4xl">
+                    {group.year}
+                  </p>
+                </div>
+
+                <ul className="mt-8 flex flex-col gap-10">
+                  {group.items.map((entry, entryIndex) => (
+                    <TimelineItem
+                      key={`${entry.org}-${entry.role}-${entry.period}`}
+                      entry={entry}
+                      showCategory={active === 'all'}
+                      index={entryIndex}
+                    />
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ol>
+        </div>
 
         {active === 'organization' && (
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          <div className="mt-16 grid gap-6 lg:grid-cols-3">
             {capabilityGroups.map((group, index) => (
               <Reveal key={group.title} delay={index * 90} className="flex flex-col rounded-md border border-[var(--color-line)] p-7">
                 <h3 className="font-[var(--font-display)] text-lg font-medium text-[var(--color-paper)]">{group.title}</h3>

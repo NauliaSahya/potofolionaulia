@@ -20,7 +20,7 @@ export const projectList: ProjectSummary[] = [
     category: 'Medical Informatics · Healthcare Technology',
     year: '2026',
     description:
-      'A web-based outpatient information system integrating self-screening data with outpatient workflows, built on a hybrid database and HL7 FHIR R4.',
+      'Reached 8,479 req/s with FHIR resources generated in under 40 ms, validated on 12,401 documents with 100% of functional and security scenarios passed, by building a web-based outpatient system on a hybrid MySQL and MongoDB database with HL7 FHIR R4.',
     tech: ['Python', 'PHP', 'MySQL', 'MongoDB', 'HL7 FHIR R4'],
     image: assets.projects.sirj.admin,
     imageAlt: 'SIRJ outpatient information system web portal interface',
@@ -32,7 +32,7 @@ export const projectList: ProjectSummary[] = [
     category: 'Event Coordination · Website Implementation',
     year: '2025',
     description:
-      'Contributed to the CENIM 2025 conference website and supported event coordination alongside faculty and 3 core student committee members, coordinating 12 student staff.',
+      'Delivered the CENIM 2025 conference website and kept event operations on track with a faculty committee, 3 core student committee members, and 12 coordinated student staff, by adapting a conference template in HTML, CSS, and PHP and supporting the rundown.',
     tech: ['HTML', 'CSS', 'PHP'],
     image: assets.projects.cenim.home,
     imageAlt: 'CENIM 2025 conference website homepage shown in a browser frame',
@@ -44,7 +44,7 @@ export const projectList: ProjectSummary[] = [
     category: 'Healthcare UI · Smart Screening',
     year: '2025',
     description:
-      'UI and interface contribution for an integrated smart health screening ecosystem, presenting live vitals in a single dashboard.',
+      'Presented 8 live vital-sign parameters in a single real-time dashboard across 4 interface screens (2 device, 2 web), by designing the screening device and web platform UI in Figma.',
     tech: ['Figma', 'UI Design', 'Health Data'],
     image: assets.projects.hime.ui,
     imageAlt: 'Hi-Me smart health screening dashboard interface',
@@ -56,7 +56,7 @@ export const projectList: ProjectSummary[] = [
     category: 'Hospital Administration · Process Design',
     year: '2025',
     description:
-      'Analyzed hospital administrative workflows at RS Primasatya Husada Citra and identified inefficiencies in medical coding processes.',
+      'Identified medical coding inefficiencies at RS Primasatya Husada Citra and validated a proposed digital workflow with leaders of 4 hospital units, by mapping administrative workflows, prototyping in Figma, and processing data in Excel.',
     tech: ['Figma', 'Microsoft Excel', 'Process Design'],
     image: assets.projects.hospital.figma,
     imageAlt: 'Figma prototype of a proposed medical coding workflow tool',
@@ -73,7 +73,7 @@ export const sirj = {
   category: ['Medical Informatics', 'Healthcare Technology', 'Web System'],
   date: 'February 2026 - August 2026',
   description:
-    'Developed a web-based outpatient information system integrating patient self-screening data with outpatient workflows, using a hybrid database architecture and HL7 FHIR R4 for healthcare interoperability.',
+    'Integrated patient self-screening data into outpatient workflows (reaching 8,479 req/s, generating FHIR resources in under 40 ms, and passing 100% of functional and security scenarios across 12,401 validated documents) by developing a web-based system on a hybrid MySQL and MongoDB architecture with HL7 FHIR R4 for healthcare interoperability.',
   stack: ['Python', 'PHP', 'HTML', 'CSS', 'REST API', 'MySQL', 'MongoDB', 'HL7 FHIR R4', 'Figma'],
   results: [
     { value: '8,479 req/s', label: 'hybrid architecture' },
@@ -143,7 +143,7 @@ export const cenim = {
   roles: ['Event Coordination', 'Website Implementation', 'Rundown Coordination', 'Staff Coordination'],
   tech: ['HTML', 'CSS', 'PHP'],
   description:
-    'Contributed to the implementation of the CENIM 2025 conference website and supported event operations alongside faculty committee (Dosen & Tendik), collaborating with 3 core student committee members and coordinating 12 student staff.',
+    'Delivered the CENIM 2025 conference website and supported event operations alongside the faculty committee (Dosen & Tendik) by adapting a pre-existing template in HTML, CSS, and PHP, collaborating with 3 core student committee members, and coordinating 12 student staff on the rundown.',
   templateNote: 'Built on a pre-existing conference template, adapted and implemented for CENIM 2025.',
   team: {
     committee: 'Dosen & Tendik',
@@ -165,7 +165,7 @@ export const hime = {
   title: 'Hi-Me!',
   subtitle: 'Smart Health Screening Ecosystem',
   description:
-    'UI and interface contribution for an integrated smart health screening ecosystem, translating live vitals from embedded screening devices into real-time web dashboards.',
+    'Presented 8 live vital-sign parameters from embedded screening devices in real-time web dashboards, across 4 interface screens (2 device, 2 web), by designing the screening UI in Figma.',
   parameters: [
     { label: 'Heart Rate', unit: 'bpm', note: 'Continuous pulse monitoring from the screening device.' },
     { label: 'Respiratory Rate', unit: 'rpm', note: 'Breaths per minute, tracked during screening.' },
@@ -238,7 +238,7 @@ export const medicalCoding = {
   role: 'Hospital Administration Intern',
   date: 'July 2025 - August 2025',
   description:
-    'Analyzed hospital administrative workflows and identified inefficiencies in medical coding processes. Proposed streamlined digital workflows and presented findings directly to hospital leadership.',
+    'Identified inefficiencies in medical coding and validated a streamlined digital workflow with leaders of 4 hospital units (Customer Service, IT, Medical Records, Komkordik) by analyzing administrative workflows in the Medical Records Unit, prototyping the workflow in Figma, and presenting the findings directly to hospital leadership.',
   contributions: [
     'Workflow analysis',
     'Requirement gathering',
