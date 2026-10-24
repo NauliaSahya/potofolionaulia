@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ArrowDownUp, Briefcase, Calendar } from 'lucide-react'
+import { Briefcase, Calendar } from 'lucide-react'
 import {
   capabilityGroups,
   experienceCategories,
@@ -29,7 +29,7 @@ const flatEntries: FlatEntry[] = experienceCategories.flatMap((category) =>
 )
 
 const tabs: { id: TabId; label: string; count: number; summary: string }[] = [
-  { id: 'all', label: 'All', count: flatEntries.length, summary: 'The full journey, year by year.' },
+  { id: 'all', label: 'All', count: flatEntries.length, summary: 'The full journey, newest first. Each role sits under the year it ended.' },
   ...experienceCategories.map((category) => ({
     id: category.id as TabId,
     label: category.label,
@@ -38,13 +38,15 @@ const tabs: { id: TabId; label: string; count: number; summary: string }[] = [
   })),
 ]
 
-function groupByYear(entries: FlatEntry[], newestFirst: boolean): YearGroup[] {
-  const sorted = [...entries].sort((a, b) => a.start.localeCompare(b.start))
-  if (newestFirst) sorted.reverse()
+// Newest first: whichever role finished last is on top. Each entry sits under
+// the marker of the year it ended, so a role running 2025-2026 appears between
+// the 2026 and 2025 markers.
+function groupByYear(entries: FlatEntry[]): YearGroup[] {
+  const sorted = [...entries].sort((a, b) => b.end.localeCompare(a.end) || b.start.localeCompare(a.start))
 
   const groups: YearGroup[] = []
   for (const entry of sorted) {
-    const year = entry.start.slice(0, 4)
+    const year = entry.end.slice(0, 4)
     const last = groups[groups.length - 1]
     if (last && last.year === year) {
       last.items.push(entry)
@@ -113,7 +115,6 @@ function TimelineItem({ entry, showCategory, index }: { entry: FlatEntry; showCa
 
 export function Experience() {
   const [active, setActive] = useState<TabId>('all')
-  const [newestFirst, setNewestFirst] = useState(false)
   const { ref, progress } = useScrollProgress<HTMLDivElement>()
 
   // Deep links from the navbar dropdown, e.g. #experience-volunteer.
@@ -138,8 +139,8 @@ export function Experience() {
 
   const groups = useMemo(() => {
     const entries = active === 'all' ? flatEntries : flatEntries.filter((entry) => entry.category === active)
-    return groupByYear(entries, newestFirst)
-  }, [active, newestFirst])
+    return groupByYear(entries)
+  }, [active])
 
   return (
     <section id="experience" className="border-t border-[var(--color-line)] py-24 md:py-32">
@@ -154,7 +155,7 @@ export function Experience() {
           </Reveal>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
+        <div className="mt-10">
           <div className="overflow-x-auto pb-1">
             <div role="tablist" aria-label="Kategori pengalaman" className="inline-flex min-w-max rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] p-1">
               {tabs.map((item) => {
@@ -180,14 +181,6 @@ export function Experience() {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setNewestFirst((value) => !value)}
-            className="inline-flex items-center gap-2 rounded-full border border-[var(--color-line)] px-4 py-2 text-xs text-[var(--color-paper-dim)] transition-colors hover:border-[var(--color-cyan)] hover:text-[var(--color-cyan)]"
-          >
-            <ArrowDownUp size={13} />
-            {newestFirst ? 'Newest first' : 'Oldest first'}
-          </button>
         </div>
 
         <p className="mt-6 text-sm text-[var(--color-paper-dim)]">{tab.summary}</p>

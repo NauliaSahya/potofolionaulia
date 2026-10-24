@@ -11,8 +11,14 @@ export type ExperienceEntry = {
   role: string
   /** Label tampilan, mis. "Jan 2025 - Feb 2026". */
   period: string
-  /** Bulan mulai (YYYY-MM), dipakai untuk mengurutkan dan mengelompokkan per tahun. */
+  /** Bulan mulai (YYYY-MM). */
   start: string
+  /**
+   * Bulan selesai (YYYY-MM). Urutan timeline memakai ini: yang paling akhir
+   * selesai ada di paling atas, dan entri ditempatkan di bawah penanda tahun
+   * selesainya (jadi peran 2025-2026 berada di antara penanda 2026 dan 2025).
+   */
+  end: string
   /** Konteks singkat, mis. nama acara atau bidangnya. */
   context?: string
   /** Pencapaian dengan rumus XYZ: hasil (X), ukuran (Y), cara (Z). */
@@ -45,6 +51,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Practicum Coordinator',
         period: 'Aug 2025 - Jul 2026',
         start: '2025-08',
+        end: '2026-07',
         bullets: [
           'Kept instructional standards consistent through a full academic year by leading 20+ teaching assistants, allocating tasks, and overseeing daily practicum activities.',
           'Delivered biomedical signal processing practicums to 100+ undergraduate students by coordinating lecturers, assistants, and students through a structured program.',
@@ -56,6 +63,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Hospital Administration Intern',
         period: 'Jul 2025 - Aug 2025',
         start: '2025-07',
+        end: '2025-08',
         bullets: [
           'Identified inefficiencies in medical coding by analyzing administrative workflows in the Medical Records Unit and proposing targeted operational improvements.',
           'Streamlined the proposed medical coding data exchange by designing a digital prototype in Figma.',
@@ -69,6 +77,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Vice Practicum Coordinator',
         period: 'Aug 2024 - Jul 2025',
         start: '2024-08',
+        end: '2025-07',
         bullets: [
           'Prevented operational bottlenecks across all practicum sessions by planning schedules, student group assignments, and laboratory logistics.',
           'Kept teaching assistant work aligned with the academic curriculum by helping oversee daily practicum activities and task allocation.',
@@ -87,6 +96,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Event & Website Contribution',
         period: '2025',
         start: '2025-01',
+        end: '2025-12', // bulan selesai belum diketahui, ganti jika tahu
         context: 'International Conference on Computer Engineering, Network and Intelligent Multimedia',
         bullets: [
           'Delivered the CENIM 2025 conference website by adapting a pre-existing conference template with HTML, CSS, and PHP.',
@@ -102,6 +112,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Expert Staff of Data Management',
         period: 'May 2024 - Aug 2024',
         start: '2024-05',
+        end: '2024-08',
         bullets: [
           'Verified 5,000+ event tickets for authenticity by applying UV verification, ensuring accurate attendee admission.',
           'Ensured only registered participants entered the event by supervising entry gate operations.',
@@ -114,6 +125,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Expert Staff of Secretarial',
         period: 'Mar 2024 - Mar 2025',
         start: '2024-03',
+        end: '2025-03',
         bullets: [
           'Managed participant data for 3 event categories, supporting 170+ participants throughout the event.',
           'Streamlined registration and feedback by designing digital workflows in Google Forms, with records kept in Google Drive and Google Sheets.',
@@ -126,6 +138,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Staff of Secretarial',
         period: 'Sep 2023 - Nov 2023',
         start: '2023-09',
+        end: '2023-11',
         context: 'EliteXPesraf',
         bullets: [
           'Kept registration records accurate by managing participant registration through Google Forms.',
@@ -138,6 +151,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Data Management Staff',
         period: 'May 2023 - Aug 2023',
         start: '2023-05',
+        end: '2023-08',
         bullets: [
           'Tracked participant attendance by managing QR code-based registration integrated with Google Forms.',
           'Supported post-event evaluation and reporting by compiling and analyzing attendance data.',
@@ -149,6 +163,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Event Staff',
         period: 'Mar 2023 - Aug 2023',
         start: '2023-03',
+        end: '2023-08',
         context: 'Science and Technology competition',
         bullets: [
           'Kept the competition flow smooth by coordinating event schedules and match sequencing.',
@@ -161,6 +176,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Staff of Administrative Division',
         period: 'Aug 2022 - Sep 2022',
         start: '2022-08',
+        end: '2022-09',
         context: 'BME Awards 2022',
         bullets: [
           'Supported participant management by developing RSVP and event feedback forms in Google Forms.',
@@ -180,6 +196,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Secretary I',
         period: 'Jan 2025 - Feb 2026',
         start: '2025-01',
+        end: '2026-02',
         bullets: [
           'Standardized secretarial work for future administrations by developing the organization’s first Standard Operating Procedure (SOP) for Secretarial Affairs.',
           'Kept letter, SPJ (Financial Accountability Report), and LPJ (Final Accountability Report) requests on time by processing them through Google Forms.',
@@ -194,6 +211,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Secretary II',
         period: 'May 2024 - Dec 2024',
         start: '2024-05',
+        end: '2024-12',
         bullets: [
           'Supported organizational operations by drafting official documents, including recommendation letters, statements, and administrative correspondence.',
           'Improved document organization and retrieval by managing digital archives in Google Drive and Google Sheets.',
@@ -207,6 +225,7 @@ export const experienceCategories: ExperienceCategory[] = [
         role: 'Secretary II',
         period: 'Mar 2024 - Feb 2025',
         start: '2024-03',
+        end: '2025-02',
         bullets: [
           'Supported internal and external needs by drafting official correspondence.',
           'Ensured administrative compliance by assisting in reviewing proposals, SPJ, and LPJ.',
